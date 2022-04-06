@@ -1,0 +1,33 @@
+---
+title: "Week 1 exercises"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+pacman::p_load(tidyverse, ggplot2)
+```
+
+
+1.2 Sketching a regression model and data: Figure 1.1b shows data corresponding to the fitted line 𝑦 = 46.3 + 3.0𝑥 with residual standard deviation 3.9, and values of 𝑥 ranging roughly from 0 to 4%.
+
+(a) Sketch hypothetical data with the same range of 𝑥 but corresponding to the line 𝑦 = 30 + 10𝑥 with residual standard deviation 3.9.
+
+```{r}
+
+```
+
+(b) Sketch hypothetical data with the same range of 𝑥 but corresponding to the line 𝑦 = 30 + 10𝑥 with residual standard deviation 10.
+
+```{r}
+a <- rnorm(1000, mean = 2, sd=2/3)
+hist(a)
+
+b <- rnorm(1000, sd=3.9)
+
+lm()
+```
+

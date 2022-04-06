@@ -40,29 +40,38 @@ It only changes how the code is presented in the markdown.
 
 $$  \sum x_i >> \sum y_i,   $$
 __answer:__
+Sum of x's are *much greater than* the sum of y's
 
 $$ X \in \mathbb{R}^+ $$
 __answer:__
+Random variable (matrix) X *is an element of* the set of positive real numbers
 
-$$ Y \in \mathbb{I^}^+$$
+$$ Y \in \mathbb{I}^+$$
 __answer:__
+Y is an element of the set of positive integers
+
 
 $$ x \in \mathbb{R}^+ \therefore x \notin \mathbb{R}^- $$
 __answer:__
+x is an elemt of positive real numbers therefore x is not an element of the set of negative real numbers
 
 $$ y > x \therefore x - y \in \mathbb{R}^-$$
 __answer:__
+y is larger than x therefore x minus y is an element of the set of negative real numbers
 
 $$ x \in \mathbb{I}^-  y \in \mathbb{I}^+ \therefore x + y  \in \mathbb{I} $$
 
 __answer:__
+x is an element of negative integers and y  is an element of positive integers therefore x plus y is an element of the set of integers
+
 
 $$ x \varpropto y \because x = c \cdot y  $$
 __answer:__
+x is proportional to y therefore x is equal to c times y
 
 $$ x \in \mathbb{I} \ and  \ x \notin \mathbb{I}^- \Rightarrow x \in \mathbb{I}^+ $$ 
 __answer:__
-
+if x is an element of integers and x is not and element of negative integers then x is an element of positive integers
 
 ### Part 2
 Now i'll present you for some statements that you should translate into logical statements using the notation learned from the chapter. 
@@ -75,28 +84,29 @@ and https://oeis.org/wiki/List_of_LaTeX_mathematical_symbols
 Let x be the any number of postive integers and y be any negative integer. Therefore the product 
 of x and y must be a negative integer. 
 __answer:__
-$$ $$
+$$ x \in \mathbb{I^+} \ and  \ y \in \mathbb{I}^- \therefore  x \cdot y  \in \mathbb{I^-} $$
 
 
 x is equal to 0 and a exist in the positive real numbers therefore a to the power of x is equal to 1. 
 __answer:__
-$$ $$
+$$ x=0 \ and \ a \in \mathbb{R^+} \therefore a^x=1 $$
 
 
 The mean of y_hat is equal to the sum of of all y_i divded by the length of y_i which is an approximate of the mean of y.   
 __answer:__
-$$ $$
+$$ \bar{\hat{y}}=\frac{\sum{y_i}}{n} \approx \bar{y}  $$
 
 
 x is proportional to y iff (if and only if) x = y * c
 __answer:__
-$$ $$
+$$ x \varpropto y \longleftrightarrow x=y \cdot c $$
 
 
 
 **Make up your own example.**
 Make up a few of your own examples where you generate both the plain English and the math notation. 
 
+$$ x^y =   $$
 
 
 We will walk through some of these examples together. Continue with exercises from the book. 
@@ -111,35 +121,90 @@ Find the following set z for each expression.
 
   1)
 $$ z = x \cup y  $$
+```{r}
+x <- c(0,2,3,10,8,4,11)
+y <- c(1,3,10,4,20,11)
+
+z=0,1,2,3,4,8,10,11,20
+
+```
+
+
+
   2)
 $$ z =x \cap y $$
+```{r}
+x <- c(0,2,3,10,8,4,11)
+y <- c(1,3,10,4,20,11)
+
+z=3,10,4,11
+```
+
 
   3)
 $$z = x \setminus y $$
+```{r}
+x <- c(0,2,3,10,8,4,11)
+y <- c(1,3,10,4,20,11)
+
+z= 0, 2, 8
+```
 
   4) 
 $$max(x) $$
+```{r}
+z = 11
+```
 
   5)
 $$ max(x \cap y)$$
-
+```{r}
+z = 11
+```
 
 # Exercises from the book. 
 These exercises is to refresh some math fundamentals from high-school which will be useful for coming weeks. You can do most of these with pen and paper. 
 
 
 ### 1.1 
-
+$$ (−x^4y^2)^2 \\  $$
 
 ### 1.4 
+The relationship between Fahrenheit and Centigrade can be expressed as 5f − 9c = 160. Show that this is a linear function by putting it in y = mx + b format with c = y. Graph the line indicating slope and intercept.
+
+$$ 5f-9c=160 \\ \frac{5f-160}{9}=\frac{9c}{9} \\ c=0.556f-17.7$$
+
+```{r}
+# plotting a predefined function in R
+linear <-  0.5556*x-17.7
+
+curve(0.5556*x-17.7, from=-50, to=50, n=300, xlab="xvalue", ylab="yvalue", xlim = c(-50,50), ylim = c(-50,50), 
+             col="blue", type="l", lwd=2, main="Plot of c=0.556f-17.7"  )
+grid()
+```
+
 
 ### 1.6
+Solve the following inequalities so that the variable is the only term on the left-hand side:
 
+Opg 1.4A
+$$ x−3 < 2x+15 \\ x−3-2x < 2x+15-2x \\ -x-3+3 < 15+3 \\ -x=18$$
+Opg 1.4B
+$$ 11 − \frac{4}{3}t > 3 \\ 11-11 − \frac{4}{3}t > 3-11 \\ -\frac{4}{3}t*3 > -8*3 \\ -\frac{12}{3}t > -24 \\ \frac{-4t}{-4}>\frac{-24}{-4} \\ t > 6 $$
+opg 1.4C "se mellemregninger på papir"
+$$ \frac{5}{6}y+3(y-1) \geq \frac{11}{6}(1-y)+2y \\ y \geq \frac{29}{22}$$
 
 ### 1.9
+Which of the following functions are continuous? If not, where are
+the discontinuities?
+
+Opg 1.9 A
+At x=-1 and x=1 y will be 0
+Not continous
 
 
 ### 1.18 (hard)
+
 
 ### 1.21
 

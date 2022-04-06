@@ -1,0 +1,188 @@
+---
+title: "Class 3 exercises"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+```{r}
+pacman::p_load(tidyverse, ggplot2)
+```
+
+5.1, 5.3, 5.4, 5.5 5.8, 5.9, 5.11, 5.12, 5.13
+
+5.2 (semi-hard), 5.6 (hard)
+
+5.1
+Discrete probability simulation: Suppose that a basketball player has a 60% chance of making a shot, and he keeps taking shots until he misses two in a row. Also assume his shots are independent (so that each shot has 60% probability of success, no matter what happened before).
+(a) Write an R function to simulate this process.
+```{r}
+balling <- function(prob){
+  # define a vector/list which replicates two operations of binomial distribution simulation
+  # Since every shot is independent we write 1,1,prob
+  vector <- replicate(2, rbinom(1,1,prob))
+  
+  # The while loop defines the condition first where the sum of the last two numbers of the vector 
+  # is not 0 and then the process will continue
+  while ((vector[length(vector)] + vector[length(vector) - 1]) != 0) {
+    
+    # Here the operation of the condition is repeated
+    # Which is just adding new numbers to the vector
+    vector <- c(vector, rbinom(1,1,prob))
+  }
+  return(vector)
+}
+
+balling(0.6)
+```
+
+(b) Put the R function in a loop to simulate the process 1000 times. Use the simulation to estimate the mean and standard deviation of the total number of shots that the player will take, and plot a histogram representing the distribution of this random variable.
+```{r}
+# replicate the simulation 1000 times with the replicate() function
+shoots <- replicate(1000, balling(0.6))
+
+# find the mean of all lengths of each vector inside the 1000 simulations
+mean(sapply(shoots, length))
+
+# Find the sd in the same way
+sd(sapply(shoots, length))
+
+# plot histogram
+hist(sapply(shoots, length))
+```
+
+(c) Using your simulations, make a scatterplot of the number of shots the player will take and the proportion of shots that are successes.
+
+```{r}
+# create a datframe where one column is mean of shoots in each simulation (therefore the proportion)
+# and one column whit
+df <- cbind(sapply(shoots,mean), sapply(shoots,length))
+
+plot(df[,2], df[,1])
+```
+
+
+5.3
+Binomial distribution: A player takes 10 basketball shots, with a 40% probability of making each shot. Assume the outcomes of the shots are independent.
+
+(a) Write a line of R code to compute the probability that the player makes exactly 3 of the 10 shots.
+```{r}
+# density binomial distribution with brackets specifying to return number of 3rd position in vector
+dbinom(1:10,size=10,prob=0.4)[3]
+
+```
+
+(b) Write an R function to simulate the 10 shots. Loop this function 10 000 times and check that your simulated probability of making exactly 3 shots is close to the exact probability computed in (a).
+
+```{r}
+# simulate binomial distribution 10000 times with 10 shots and a probability of 40% of success
+shots <- rbinom(10000,size=10,prob=0.4)
+
+# Retrieve probability of making exactly 3 shots by making R sum the 0 and 1's of binom distribution
+# and condition them by those ehich are summed to 3 divided by length of all shots
+sum(shots==3)/length(shots)
+```
+
+5.4
+Demonstration of the Central Limit Theorem: Let 𝑥 = 𝑥1 + · · · + 𝑥20, the sum of 20 independent uniform(0, 1) random variables. In R, create 1000 simulations of 𝑥 and plot their histogram. What is the normal approximation to this distribution provided by the Central Limit Theorem? Overlay a graph of the normal density on top of the histogram. Comment on any differences between the histogram and the curve.
+
+```{r}
+# create binom distribution which 1000 simulations of 20 x's
+CLT <- rbinom(1000,size=20,prob=0.5)
+
+#create dataframe to plot in ggplot 
+df2 <- data.frame(cbind(CLT))
+
+#ggplot histogram with density curve
+df2 %>% ggplot(aes(x=CLT))+ geom_histogram(aes(y=..density..),fill="skyblue",bins=15)+ stat_function(fun = dnorm, args = list(mean = mean(df2$CLT, na.rm = TRUE), sd = sd(df2$CLT, na.rm = TRUE)), colour= "black", size = 2)+ theme_classic()
+
+```
+
+5.5
+Distribution of averages and differences: The heights of men in the United States are approximately normally distributed with mean 69.1 inches and standard deviation 2.9 inches. The heights of women are approximately normally distributed with mean 63.7 inches and standard deviation 2.7 inches. Let 𝑥 be the average height of 100 randomly sampled men, and 𝑦 be the average height of 100 randomly sampled women. In R, create 1000 simulations of 𝑥 − 𝑦 and plot their histogram. Using the simulations, compute the mean and standard deviation of the distribution of 𝑥 − 𝑦 and compare to their exact values.
+
+```{r}
+
+# function for sampling 100 men from a distribution of 20000 men's height
+men_sample <- function(n){
+  men <- rnorm(2e4,mean=69.1,sd=2.9)
+  
+  sample(men, size=n,replace=TRUE)
+}
+
+# function for sampling 100 men from a distribution of 20000 women's height
+women_sample <- function(n){
+  women <- rnorm(2e4, mean=63.7, sd=2.7)
+  
+  sample(women, size=n,replace=TRUE)
+}
+
+# replicate each sample process 1000 times
+simulate_men <- replicate(1000, men_sample(100))
+simulate_women <- replicate(1000, women_sample(100))
+
+# create histogram, mean, and sd for 1000 replicatees of 100 samples of the distribution of height of men
+hist(simulate_men)
+mean(simulate_men)
+sd(simulate_men)
+
+# create histogram, mean, and sd for 1000 replicatees of 100 samples of the distribution of height of women
+hist(simulate_women)
+mean(simulate_women)
+sd(simulate_women)
+
+# values align with the expected values of orginal mean and sd
+```
+
+5.8
+Coverage of confidence intervals: On page 15 there is a discussion of an experimental study of an education-related intervention in Jamaica, in which the point estimate of the treatment effect, on the log scale, was 0.35 with a standard error of 0.17. Suppose the true effect is 0.10—this seems more realistic than the point estimate of 0.35—so that the treatment on average would increase earnings by 0.10 on the log scale. Use simulation to study the statistical properties of this experiment, assuming the standard error is 0.17.
+
+(a) Simulate 1000 independent replications of the experiment assuming that the point estimate is normally distributed with mean 0.10 and standard deviation 0.17.
+```{r}
+# how do one do this without knowing the number of participants??
+jamaica <- rnorm(1000, mean=0.10, sd=0.17)
+```
+
+(b) For each replication, compute the 95% confidence interval. Check how many of these intervals include the true parameter value.
+```{r}
+df3 <- data.frame(jamaica) %>% 
+  mutate(cl_upper=jamaica+1.960*0.17, cl_lower=jamaica-1.960*0.17)
+
+df4 <- df3 %>% 
+  filter(jamaica>cl_lower & jamaica<cl_upper)
+
+```
+
+(c) Compute the average and standard deviation of the 1000 point estimates; these represent the mean and standard deviation of the sampling distribution of the estimated treatment effect.
+
+
+5.9
+Coverage of confidence intervals after selection on statistical significance: Take your 1000 simulations from Exercise 5.8, and select just the ones where the estimate is statistically significantly different from zero. Compute the average and standard deviation of the selected point estimates. Compare these to the result from Exercise 5.8.
+
+5.2
+Continuous probability simulation: The logarithms of weights (in pounds) of men in the United States are approximately normally distributed with mean 5.13 and standard deviation 0.17; women’s log weights are approximately normally distributed with mean 4.96 and standard deviation 0.20. Suppose 10 adults selected at random step on an elevator with a capacity of 1750 pounds. What is the probability that their total weight exceeds this limit?
+
+```{r}
+function(x){
+men_weight <- rnorm(1e4, mean=5.13,sd=0.17)
+women_weight <- rnorm(1e4, mean=4.96 ,sd=0.2)
+
+random <- rbinom(x,size=1,prob=0.5)
+
+vec <- c()
+
+while(random<2){
+if(random==1){
+    vec <- cbind(vec, sample(women_weight, size=1, replace=T))
+}else{
+     vec <- cbind(vec, sample(men_weight, size=1, replace=T))
+}
+}
+return(vec)
+}
+
+elevator(10)
+```
